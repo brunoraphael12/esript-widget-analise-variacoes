@@ -1,0 +1,450 @@
+// ============================================================================
+// Widget Análise de Variações - Estilos
+// ArcGIS Experience Builder 11.3
+// ============================================================================
+
+// Variáveis
+$primary-color: #0079c1;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+$border-radius: 4px;
+$border-color: #dee2e6;
+
+// ============================================================================
+// Container Principal
+// ============================================================================
+
+.widget-analise-variacoes {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  // Header
+  .widget-header {
+    padding: $spacing-md;
+    border-bottom: 1px solid $border-color;
+    background: #f8f9fa;
+
+    h3 {
+      margin: 0 0 $spacing-xs 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #212529;
+    }
+
+    .widget-subtitle {
+      margin: 0;
+      font-size: 0.875rem;
+      color: $secondary-color;
+    }
+  }
+
+  // Content
+  .widget-content {
+    flex: 1;
+    padding: $spacing-md;
+    overflow-y: auto;
+
+    .section {
+      margin-bottom: $spacing-lg;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .section-label {
+      display: block;
+      margin-bottom: $spacing-sm;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #495057;
+    }
+
+    .text-muted {
+      color: $secondary-color;
+      font-size: 0.875rem;
+    }
+  }
+
+  // ============================================================================
+  // Form Controls
+  // ============================================================================
+
+  .form-control {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    font-size: 0.875rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: $primary-color;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 121, 193, 0.25);
+    }
+
+    &:disabled {
+      background-color: #e9ecef;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // ============================================================================
+  // Método de Análise
+  // ============================================================================
+
+  .method-toggle {
+    display: flex;
+    gap: $spacing-md;
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      cursor: pointer;
+      font-size: 0.875rem;
+      user-select: none;
+
+      input[type="radio"] {
+        cursor: pointer;
+      }
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+
+  // ============================================================================
+  // Botão Gerar Mapa
+  // ============================================================================
+
+  .btn-gerar-mapa {
+    width: 100%;
+    padding: $spacing-md;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: $border-radius;
+    transition: all 0.2s ease-in-out;
+
+    &:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // ============================================================================
+  // Alertas
+  // ============================================================================
+
+  .alert {
+    padding: $spacing-md;
+    border-radius: $border-radius;
+    font-size: 0.875rem;
+    margin-top: $spacing-md;
+
+    &.alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    &.alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    &.alert-warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      color: #856404;
+    }
+
+    &.alert-info {
+      background-color: #d1ecf1;
+      border: 1px solid #bee5eb;
+      color: #0c5460;
+    }
+  }
+
+  // ============================================================================
+  // Temporal Selector
+  // ============================================================================
+
+  .temporal-selector {
+    .year-selector {
+      margin-bottom: $spacing-md;
+    }
+
+    .month-checkboxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: $spacing-sm;
+
+      .month-checkbox {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+
+        label {
+          cursor: pointer;
+          font-size: 0.875rem;
+          user-select: none;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+
+    .todos-checkbox {
+      margin-bottom: $spacing-md;
+      padding: $spacing-sm $spacing-md;
+      background-color: #f8f9fa;
+      border-radius: $border-radius;
+      font-weight: 600;
+    }
+  }
+
+  // ============================================================================
+  // Filtros Dinâmicos
+  // ============================================================================
+
+  .dynamic-filters {
+    .filter-group {
+      margin-bottom: $spacing-lg;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .filter-label {
+      display: block;
+      margin-bottom: $spacing-sm;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #495057;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+
+        label {
+          cursor: pointer;
+          font-size: 0.875rem;
+          user-select: none;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+
+        input[type="checkbox"] {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  // ============================================================================
+  // Loading Spinner
+  // ============================================================================
+
+  .loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    padding: $spacing-xl;
+    color: $secondary-color;
+  }
+
+  // ============================================================================
+  // Simbolização
+  // ============================================================================
+
+  .symbology-controls {
+    padding: $spacing-md;
+    background: #f8f9fa;
+    border-radius: $border-radius;
+    margin-top: $spacing-md;
+
+    .symbology-header {
+      margin-bottom: $spacing-md;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #495057;
+    }
+
+    .control-group {
+      margin-bottom: $spacing-md;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      label {
+        display: block;
+        margin-bottom: $spacing-sm;
+        font-size: 0.875rem;
+        color: #495057;
+      }
+    }
+  }
+
+  // ============================================================================
+  // Legenda
+  // ============================================================================
+
+  .legend {
+    padding: $spacing-md;
+    background: white;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    margin-top: $spacing-md;
+
+    .legend-title {
+      margin-bottom: $spacing-md;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #212529;
+    }
+
+    .legend-items {
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        margin-bottom: $spacing-sm;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .legend-symbol {
+          width: 30px;
+          height: 20px;
+          border: 1px solid $border-color;
+          border-radius: 2px;
+        }
+
+        .legend-label {
+          font-size: 0.75rem;
+          color: #495057;
+        }
+      }
+    }
+  }
+
+  // ============================================================================
+  // Responsividade
+  // ============================================================================
+
+  @media (max-width: 768px) {
+    .widget-header {
+      h3 {
+        font-size: 1.1rem;
+      }
+    }
+
+    .method-toggle {
+      flex-direction: column;
+    }
+
+    .temporal-selector .month-checkboxes {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .widget-content {
+      padding: $spacing-sm;
+    }
+
+    .temporal-selector .month-checkboxes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+// ============================================================================
+// Settings Panel
+// ============================================================================
+
+.widget-setting-analise-variacoes {
+  padding: $spacing-md;
+
+  .variavel-config {
+    background: #f8f9fa;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background: #e9ecef;
+    }
+
+    h6 {
+      margin-bottom: $spacing-md;
+      font-weight: 600;
+      color: #212529;
+    }
+  }
+}
+
+// ============================================================================
+// Utilidades
+// ============================================================================
+
+.w-100 {
+  width: 100%;
+}
+
+.mb-3 {
+  margin-bottom: $spacing-md !important;
+}
+
+.mb-4 {
+  margin-bottom: $spacing-lg !important;
+}
+
+.p-3 {
+  padding: $spacing-md !important;
+}
+
+.border {
+  border: 1px solid $border-color !important;
+}
+
+.rounded {
+  border-radius: $border-radius !important;
+}

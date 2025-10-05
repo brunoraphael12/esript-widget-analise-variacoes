@@ -1,0 +1,31 @@
+{
+  "name": "analise-variacoes",
+  "label": "Análise de Variações",
+  "type": "widget",
+  "version": "1.0.0",
+  "exbVersion": "1.18.0",
+  "author": "Esript",
+  "description": "Widget para análise temporal de dados geográficos de transporte público com capacidade de comparação entre períodos e visualização de variações.",
+  "copyright": "",
+  "license": "MIT",
+  "properties": {
+    "hasSettingPage": true,
+    "hasStyle": true,
+    "hasLocale": false,
+    "hasUIBuilder": false,
+    "hasVersionManager": false,
+    "supportInlineEditing": false,
+    "supportRepeat": false,
+    "canCreateMapWidget": false,
+    "isWAB2Widget": false
+  },
+  "defaultSize": {
+    "width": 400,
+    "height": 600
+  },
+  "minimumSize": {
+    "width": 350,
+    "height": 500
+  },
+  "dependency": "jimu-arcgis"
+}

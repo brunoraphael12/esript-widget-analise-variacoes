@@ -1,0 +1,126 @@
+{
+  "variaveis": [
+    {
+      "id": "exemplo-variavel",
+      "nome": "Nome da Variável",
+      "tipo": "linha",
+      "urlGeografico": "https://seu-servidor/arcgis/rest/services/Camada_Geografica/FeatureServer/0",
+      "urlAlfanumerico": "https://seu-servidor/arcgis/rest/services/Tabela_Alfanumerica/FeatureServer/0",
+      "codigoLigacao": "OBJECTID",
+      "campoEixo": "nome",
+      "campoValor": "valor",
+      "camposFiltro": ["campo_filtro_1", "campo_filtro_2"],
+      "camposFiltroAlias": {
+        "campo_filtro_1": "Nome do Filtro 1",
+        "campo_filtro_2": "Nome do Filtro 2"
+      },
+      "tipoData": "separados",
+      "campoAno": "ano",
+      "campoMes": "mes"
+    }
+  ],
+  "filtros": [
+    {
+      "id": "filtro1",
+      "nome": "Filtro 1",
+      "tipo": "multiplo",
+      "campo": "CAMPO_FILTRO_1",
+      "opcaoTodos": true,
+      "dependeDe": null
+    },
+    {
+      "id": "filtro2",
+      "nome": "Filtro 2",
+      "tipo": "multiplo",
+      "campo": "CAMPO_FILTRO_2",
+      "opcaoTodos": true,
+      "dependeDe": "filtro1"
+    }
+  ],
+  "textos": {
+    "titulo": "Análise de Variações",
+    "subtitulo": "Análise temporal de dados de transporte",
+    "labelVariavel": "Selecione a variável",
+    "labelMetodo": "Método de análise",
+    "labelPeriodo": "Período temporal",
+    "labelPeriodo1": "1º Período",
+    "labelPeriodo2": "2º Período",
+    "labelAno": "Ano",
+    "labelMeses": "Meses",
+    "botaoGerar": "Gerar Mapa",
+    "msgSucesso": "Camada gerada com sucesso",
+    "msgErro": "Erro ao gerar camada",
+    "msgSemDados": "Nenhum dado encontrado",
+    "msgCarregando": "A carregar..."
+  },
+  "simbologiaPadrao": {
+    "semVariacao": {
+      "numClasses": 5,
+      "metodo": "natural-breaks",
+      "rampa": "green-yellow-red"
+    },
+    "comVariacao": {
+      "classes": [
+        {
+          "min": -999999,
+          "max": -50,
+          "cor": [139, 0, 0, 255],
+          "label": "Redução > 50%",
+          "largura": 1
+        },
+        {
+          "min": -50,
+          "max": -25,
+          "cor": [255, 99, 71, 255],
+          "label": "Redução 25-50%",
+          "largura": 2
+        },
+        {
+          "min": -25,
+          "max": 0,
+          "cor": [255, 255, 0, 255],
+          "label": "Redução < 25%",
+          "largura": 3
+        },
+        {
+          "min": 0,
+          "max": 25,
+          "cor": [144, 238, 144, 255],
+          "label": "Crescimento < 25%",
+          "largura": 4
+        },
+        {
+          "min": 25,
+          "max": 50,
+          "cor": [0, 128, 0, 255],
+          "label": "Crescimento 25-50%",
+          "largura": 5
+        },
+        {
+          "min": 50,
+          "max": 999999,
+          "cor": [0, 100, 0, 255],
+          "label": "Crescimento > 50%",
+          "largura": 6
+        }
+      ]
+    }
+  },
+  "configuracaoAvancada": {
+    "cache": true,
+    "tempoCache": 300,
+    "timeout": 30,
+    "maxFeatures": 5000,
+    "zoomAutomatico": true,
+    "posicaoLegenda": "bottom-right",
+    "debugMode": false
+  },
+  "autenticacao": {
+    "enabled": false,
+    "portalUrl": "https://www.arcgis.com/sharing/rest",
+    "username": "",
+    "password": "",
+    "tokenExpiration": 60
+  },
+  "useMapWidgetIds": []
+}

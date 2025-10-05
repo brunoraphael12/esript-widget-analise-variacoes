@@ -1,0 +1,145 @@
+# ============================================================================
+# Node.js / npm
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# ============================================================================
+# TypeScript / JavaScript
+# ============================================================================
+# Arquivos compilados TypeScript
+widget/src/**/*.js
+widget/src/**/*.js.map
+dist/
+build/
+*.tsbuildinfo
+
+# ============================================================================
+# ArcGIS Experience Builder
+# ============================================================================
+# Ignora arquivos gerados pelo build do Experience Builder
+widget/dist/
+widget/build/
+
+# ============================================================================
+# IDE / Editor
+# ============================================================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (WebStorm, IntelliJ)
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============================================================================
+# Sistema Operacional
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# Logs e Debug
+# ============================================================================
+logs/
+*.log
+*.log.*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ============================================================================
+# Testes
+# ============================================================================
+coverage/
+.nyc_output/
+*.lcov
+.jest/
+
+# ============================================================================
+# Temporários
+# ============================================================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ============================================================================
+# Segurança - Credenciais
+# ============================================================================
+# IMPORTANTE: Nunca commitar credenciais!
+.env
+.env.local
+.env.*.local
+*.secret
+secrets.json
+
+# Arquivo de config com credenciais (manter apenas template)
+widget/config.json
+
+# ============================================================================
+# Cache
+# ============================================================================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# ============================================================================
+# Diversos
+# ============================================================================
+*.bak
+*.orig
+.sass-cache/

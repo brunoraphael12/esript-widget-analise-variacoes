@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#0079c1" rx="8"/>
+
+  <!-- Chart/Analysis Icon -->
+  <!-- Base line -->
+  <line x1="12" y1="50" x2="52" y2="50" stroke="white" stroke-width="2"/>
+  <line x1="12" y1="50" x2="12" y2="14" stroke="white" stroke-width="2"/>
+
+  <!-- Data bars representing variation -->
+  <rect x="18" y="40" width="6" height="10" fill="#90EE90"/>
+  <rect x="28" y="30" width="6" height="20" fill="#00CC00"/>
+  <rect x="38" y="35" width="6" height="15" fill="#FFFF00"/>
+  <rect x="48" y="25" width="6" height="25" fill="#00AA00"/>
+
+  <!-- Trend arrow -->
+  <path d="M 20 20 L 50 15" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M 50 15 L 46 18 L 48 20 Z" fill="white"/>
+</svg>
