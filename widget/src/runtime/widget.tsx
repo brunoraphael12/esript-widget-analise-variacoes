@@ -15,7 +15,6 @@ import MessageAlert from './components/MessageAlert';
 import SymbologyControls from './components/SymbologyControls';
 
 import './style.scss';
-import { IClassBreak } from '../types';
 
 interface State {
   jimuMapView: JimuMapView | null;

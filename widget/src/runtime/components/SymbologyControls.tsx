@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { React, jsx } from 'jimu-core';
-import { Button, NumericInput, TextInput, Label, Icon } from 'jimu-ui';
+import { Button, NumericInput, TextInput, Label } from 'jimu-ui';
 import { IClassBreak } from '../../types';
 
 interface ISymbologyControlsProps {

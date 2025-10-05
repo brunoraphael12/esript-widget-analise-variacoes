@@ -3,13 +3,13 @@
  * ArcGIS Experience Builder 11.3
  */
 
-import { IMConfig } from 'jimu-core';
+import { IMConfig as JimuIMConfig } from 'jimu-core';
 
 // ============================================================================
 // CONFIGURAÇÃO DO WIDGET
 // ============================================================================
 
-export interface IMConfig extends IMConfig {
+export interface IMConfig extends JimuIMConfig {
   variaveis: IVariableConfig[];
   filtros: IFilterConfig[];
   textos: ITextos;

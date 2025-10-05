@@ -14,7 +14,6 @@ import {
   Select,
   Option,
   Button,
-  Icon,
   Loading
 } from 'jimu-ui';
 import { IMConfig, IFieldInfo, ISettingState, IAuthToken, IAuthConfig } from '../types';
