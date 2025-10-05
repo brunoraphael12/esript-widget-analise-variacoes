@@ -934,9 +934,9 @@ export default class Setting extends React.PureComponent<
                         Testando Conexão...
                       </>
                     ) : this.state.successCamposGeo[index] ? (
-                      <>✓ Testar Conexão</>
+                      <>✓ Carregar Campos</>
                     ) : (
-                      'Testar Conexão'
+                      'Carregar Campos'
                     )}
                   </Button>
                   {this.state.errorCamposGeo[index] && (
@@ -983,9 +983,9 @@ export default class Setting extends React.PureComponent<
                         Testando Conexão...
                       </>
                     ) : this.state.successCamposAlfa[index] ? (
-                      <>✓ Testar Conexão</>
+                      <>✓ Carregar Campos</>
                     ) : (
-                      'Testar Conexão'
+                      'Carregar Campos'
                     )}
                   </Button>
                   {this.state.errorCamposAlfa[index] && (

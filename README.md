@@ -1,149 +1,274 @@
-# Instalação do Widget "Análise de Variações"
+# Widget "Análise de Variações" - ArcGIS Experience Builder
 
-## Requisitos
+## Descrição
 
-- ArcGIS Experience Builder Developer Edition 1.13 ou superior
-- Node.js 16.x ou superior
-- npm 8.x ou superior
+Widget customizado para ArcGIS Experience Builder que permite análises temporais de dados geográficos de transporte público (oferta, procura, paragens), com capacidade de comparação entre períodos e visualização automática de variações através de camadas simbolizadas dinamicamente.
 
-## Instrução de Instalação
+## 🚀 Quick Start
 
-### 1. Copiar para o Experience Builder
+### Pré-requisitos
 
-Copie a pasta `widget` para a pasta correspondente no seu Experience Builder:
+- Node.js 16+ e npm
+- ArcGIS Experience Builder 1.18 Developer Edition
+- Git
+
+### Setup Rápido (2 minutos)
 
 ```bash
-cp -r widget <CAMINHO_EXB>/client/your-extensions/widgets/analise-variacoes
+# 1. Clone o repositório
+git clone [URL_DO_REPOSITORIO]
+cd esript-widget-analise-variacoes
+
+# 2. Execute o script de configuração
+./setup-dev.sh
+
+# 3. Inicie o Experience Builder
+cd "../ArcGIS Experience Builder 1.18"
+npm start
+
+# 4. Acesse https://localhost:3001
 ```
 
-**Onde `<CAMINHO_EXB>` é o caminho da sua instalação do Experience Builder.**
+✅ O widget estará disponível na lista de widgets!
 
-### 2. Reiniciar o Experience Builder
+### Como Funciona?
 
-Se o servidor de desenvolvimento estiver rodando, pare-o (Ctrl+C) e reinicie:
+O script `setup-dev.sh` cria automaticamente um **link simbólico** entre:
+- Este repositório → `esript-widget-analise-variacoes/widget/`
+- Experience Builder → `ArcGIS Experience Builder 1.18/client/your-extensions/widgets/analise-variacoes/`
+
+**Vantagens:**
+- ✅ Mudanças no código refletidas automaticamente
+- ✅ Não precisa copiar arquivos manualmente
+- ✅ Controle de versão total no Git
+- ✅ Experience Builder pode ser atualizado sem perder o widget
+
+## 📁 Estrutura do Projeto
+
+```
+esript-widget-analise-variacoes/          # Repositório Git
+├── widget/                                # Código fonte do widget
+│   ├── src/
+│   │   ├── runtime/                      # Código principal
+│   │   │   ├── widget.tsx               # Componente principal
+│   │   │   ├── components/              # Componentes React
+│   │   │   ├── services/                # Lógica de negócio
+│   │   │   ├── utils/                   # Utilitários
+│   │   │   └── hooks/                   # Custom Hooks
+│   │   ├── setting/                     # Painel de configurações
+│   │   │   ├── setting.tsx
+│   │   │   └── components/
+│   │   ├── types.ts                     # TypeScript interfaces
+│   │   └── config.ts
+│   ├── manifest.json                     # Manifesto do widget
+│   ├── config.json                       # Schema de configuração
+│   └── icon.svg
+├── setup-dev.sh                          # Script de configuração
+├── DESENVOLVIMENTO.md                    # Guia completo de desenvolvimento
+├── CLAUDE.md                             # Documentação técnica completa
+└── README.md                             # Este arquivo
+
+../ArcGIS Experience Builder 1.18/        # Experience Builder
+└── client/your-extensions/widgets/
+    └── analise-variacoes/                # Link simbólico → widget/
+```
+
+## ⭐ Características Principais
+
+### Funcionalidades
+
+- **Seleção de Variáveis**: Escolha entre diferentes tipos de dados (Oferta, Procura, Paragens)
+- **Métodos de Análise**:
+  - **Sem Variação**: Análise de um único período temporal
+  - **Com Variação**: Comparação entre dois períodos com cálculo de variação percentual
+- **Seleção Temporal**: Escolha ano e mês(es) para análise
+- **Filtros Dinâmicos**: Filtros encadeados por Serviço e Eixo/Linha
+- **Simbolização Automática**:
+  - Classificação por cor e grossura (linhas)
+  - Cores semânticas para variação (vermelho=redução, verde=crescimento)
+- **Popups Informativos**: Exibição detalhada dos dados analisados
+
+### Especificações Técnicas
+
+- **Plataforma**: ArcGIS Experience Builder 1.18
+- **Framework**: React 18+ com TypeScript 4.5+
+- **SDK**: Jimu Framework + ArcGIS Maps SDK for JavaScript 4.x
+- **Arquitetura**: Componentes funcionais com Hooks
+
+## 🛠 Desenvolvimento
+
+### Workflow Diário
 
 ```bash
-cd <CAMINHO_EXB>/client
+# 1. Editar código
+# Edite arquivos em: esript-widget-analise-variacoes/widget/src/
+
+# 2. Visualizar mudanças
+# Refresh do navegador (Cmd+Shift+R ou Ctrl+Shift+R)
+
+# 3. Commit
+git add .
+git commit -m "feat: sua mensagem"
+git push
+```
+
+### Comandos Úteis
+
+```bash
+# Desenvolvimento (no Experience Builder)
+cd "../ArcGIS Experience Builder 1.18"
+npm start                    # Dev server
+npm start -- --inspect       # Debug mode
+npm start -- --verbose       # Logs detalhados
+
+# Build
+npm run build:widget -- --widgets=analise-variacoes
+
+# Qualidade (no repositório)
+npm run lint
+npm run type-check
+npm test
+```
+
+### Troubleshooting
+
+#### Widget não aparece
+```bash
+# Verificar link simbólico
+ls -la "../ArcGIS Experience Builder 1.18/client/your-extensions/widgets/analise-variacoes"
+
+# Recriar link se necessário
+./setup-dev.sh
+
+# Reiniciar servidor
+cd "../ArcGIS Experience Builder 1.18"
 npm start
 ```
 
-### 3. Configurar o Widget
+#### Mudanças não refletem
+- Hard refresh: **Cmd+Shift+R** (Mac) ou **Ctrl+Shift+R** (Windows)
+- Verificar erros no console do navegador (F12)
+- Reiniciar servidor do Experience Builder
 
-Após reiniciar o Experience Builder:
+## 📖 Documentação
 
-1. Abra ou crie uma aplicação no Experience Builder
-2. Clique em "Add Widget" (Adicionar Widget)
-3. Procure por "Análise de Variações" na lista de widgets
-4. Arraste o widget para a página
+- **[DESENVOLVIMENTO.md](./DESENVOLVIMENTO.md)** - Guia completo de desenvolvimento
+- **[CLAUDE.md](./CLAUDE.md)** - Documentação técnica detalhada
+  - Especificação funcional completa
+  - Arquitetura técnica
+  - Interfaces TypeScript
+  - Regras de negócio
+  - Boas práticas
 
-### 4. Configuração Inicial
+## 🎯 Configuração (BackOffice)
 
-Antes de usar o widget, você precisa configurá-lo:
+### Painel de Settings
 
-1. Clique no ícone de configurações do widget (⚙️)
-2. Configure as variáveis:
-   - Adicione pelo menos uma variável
-   - Configure os URLs dos serviços REST (geográfico e alfanumérico)
-   - Defina os campos de ligação e filtros
-   - Configure os campos de data
+1. **Gestão de Variáveis**
+   - Adicionar/remover variáveis de análise
+   - Configurar URLs REST (geográfico e alfanumérico)
+   - Definir campos de ligação e valores
 
-3. Exemplo de configuração mínima em `dist/widgets/analise-variacoes/config.json`:
+2. **Gestão de Filtros**
+   - Configurar filtros customizados
+   - Definir dependências entre filtros
+   - Reordenar filtros (drag & drop)
+
+3. **Personalização de Textos**
+   - Customizar todos os textos da interface
+
+4. **Simbolização Padrão**
+   - Definir padrões de classificação
+   - Configurar cores e intervalos
+
+5. **Configurações Avançadas**
+   - Cache, timeout, debug mode
+
+### Exemplo de Configuração
 
 ```json
 {
   "variaveis": [
     {
-      "id": "minha-variavel",
-      "nome": "Minha Variável",
+      "id": "oferta",
+      "nome": "Oferta",
       "tipo": "linha",
-      "urlGeografico": "https://seu-servidor/arcgis/rest/services/Eixos/FeatureServer/0",
-      "urlAlfanumerico": "https://seu-servidor/arcgis/rest/services/Dados/FeatureServer/0",
-      "codigoLigacao": "ID_CAMPO",
-      "campoEixo": "NOME_EIXO",
-      "campoValor": "VALOR",
-      "camposFiltro": ["FILTRO1", "FILTRO2"],
-      "camposFiltroAlias": {
-        "FILTRO1": "Nome do Filtro 1",
-        "FILTRO2": "Nome do Filtro 2"
-      },
-      "tipoData": "separados",
-      "campoAno": "ANO",
-      "campoMes": "MES"
+      "urlGeografico": "https://servidor/arcgis/rest/services/Eixos/FeatureServer/0",
+      "urlAlfanumerico": "https://servidor/arcgis/rest/services/DadosOferta/MapServer/0",
+      "codigoLigacao": "ID_EIXO",
+      "campoValor": "VALOR_OFERTA",
+      "servicosDisponiveis": ["AP", "IC", "Internacional", "Regional"]
     }
   ]
 }
 ```
 
-## Configuração de Autenticação (Opcional)
+## 📝 Uso (FrontOffice)
 
-Se seus serviços REST requerem autenticação, configure em `config.json`:
+1. **Selecionar Variável**: Escolha o tipo de análise
+2. **Escolher Método**: Sem variação ou Com variação
+3. **Definir Período**: Ano e mês(es)
+4. **Aplicar Filtros**: Serviços e eixos
+5. **Gerar Mapa**: Clique para executar análise
+6. **Ajustar Simbolização**: Modifique cores e classes
 
-```json
-{
-  "autenticacao": {
-    "enabled": true,
-    "portalUrl": "https://www.arcgis.com/sharing/rest",
-    "username": "seu-usuario",
-    "password": "sua-senha",
-    "tokenExpiration": 60
-  }
-}
+## 🏗 Arquitetura
+
+### Stack Tecnológico
+
+- **React 18+**: Functional Components + Hooks
+- **TypeScript 4.5+**: Tipagem forte
+- **Jimu Framework**: SDK do Experience Builder
+- **ArcGIS Maps SDK**: Manipulação de mapas e dados geográficos
+
+### Decisões Arquiteturais
+
+1. ✅ **React Hooks** (vs Class Components) - Código mais limpo, melhor performance
+2. ✅ **Múltiplos Services** - Separação de responsabilidades
+3. ✅ **Cache de Queries** - Melhor performance
+4. ✅ **Link Simbólico** - Desenvolvimento ágil
+
+## 🚢 Deploy
+
+```bash
+# 1. Build do widget
+cd "../ArcGIS Experience Builder 1.18"
+npm run build:widget -- --widgets=analise-variacoes
+
+# 2. Build da aplicação
+npm run build
+
+# 3. Publicar no ArcGIS Enterprise
+# Portal > Content > Add Item > Application
+# Upload do arquivo .zip gerado
 ```
 
-**⚠️ AVISO DE SEGURANÇA:** Não armazene credenciais em produção. 
+## 📚 Recursos Adicionais
 
-## Estrutura de Dados Esperada
+**Documentação:**
+- [ArcGIS Experience Builder](https://developers.arcgis.com/experience-builder/)
+- [Jimu Framework API](https://developers.arcgis.com/experience-builder/api-reference/jimu-core/)
+- [ArcGIS Maps SDK](https://developers.arcgis.com/javascript/latest/)
 
-### Camada Geográfica
-Deve conter:
-- Geometrias (pontos, linhas ou polígonos)
-- Campo de código de ligação (ex: OBJECTID, ID_EIXO)
-- Campo de nome/identificação (ex: NOME, EIXO)
+**Exemplos:**
+- [Experience Builder Samples](https://github.com/Esri/experience-builder-samples)
+- [Jimu UI Components](https://developers.arcgis.com/experience-builder/storybook/)
 
-### Tabela Alfanumérica
-Deve conter:
-- Campo de código de ligação (mesmo valor que na camada geográfica)
-- Campo de ano (numérico)
-- Campo de mês (texto formato 'YYYY-MM' ou numérico 1-12)
-- Campo(s) de valor (numérico)
-- Campos de filtro (texto ou numérico)
+## 📄 Licença
 
-## Funcionalidades
+MIT
 
-### Análise SEM Variação
-- Selecione uma variável
-- Escolha ano e mês(es)
-- Aplique filtros
-- Clique em "Gerar Mapa"
-- Visualize a camada com valores absolutos
+## 👥 Autor
 
-### Análise COM Variação
-- Selecione "Com variação"
-- Configure 1º período (ano + meses)
-- Configure 2º período (ano + meses diferentes)
-- Aplique filtros
-- Clique em "Gerar Mapa"
-- Visualize a camada com percentuais de variação
+Esript
 
-### Filtros Cascateados
-- Os filtros se atualizam automaticamente
-- Cada filtro mostra apenas valores disponíveis considerando os outros filtros
-- Período temporal também influencia os filtros
+## 💬 Contato
 
-## Resolução de Problemas
+Para suporte ou dúvidas:
+- Issues: GitHub Issues
+- Email: [Definir contato]
 
-### Widget não aparece na lista
-- Verifique se a pasta está em `your-extensions/widgets/`
-- Verifique se o `manifest.json` está correto
-- Reinicie o servidor de desenvolvimento
+---
 
-### Erro ao gerar mapa
-- Verifique se os URLs dos serviços REST estão corretos
-- Verifique se os campos configurados existem nos serviços
-- Verifique se CORS está habilitado nos serviços
-- Abra o console do navegador (F12) para ver erros detalhados
-
-### Query retorna 0 features
-- Verifique se há dados para o período selecionado
-- Tente com filtros menos restritivos
-- Verifique se os nomes dos campos estão corretos
+**Versão**: 1.0.0
+**Última atualização**: Dezembro 2024
