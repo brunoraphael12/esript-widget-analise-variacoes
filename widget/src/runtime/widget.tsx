@@ -1,18 +1,21 @@
 /** @jsx jsx */
+/** @jsxFrag React.Fragment */
 import { React, jsx, AllWidgetProps } from 'jimu-core';
 import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis';
-import { Button, Tab, Tabs } from 'jimu-ui';
+import { Tab, Tabs } from 'jimu-ui';
 import { IMConfig, ITemporalSelection, IFilterValues, AnalysisMethod, IVariableConfig } from '../types';
 
 // Componentes
-import VariableSelector from './components/VariableSelector';
-import AnalysisMethodToggle from './components/AnalysisMethodToggle';
-import TemporalSelector from './components/TemporalSelector';
-import DynamicFilters from './components/DynamicFilters';
-import EixoSelector from './components/EixoSelector';
 import LoadingSpinner from './components/LoadingSpinner';
 import MessageAlert from './components/MessageAlert';
-import SymbologyControls from './components/SymbologyControls';
+import { AnalysisTab } from './components/AnalysisTab';
+import { SymbologyTab } from './components/SymbologyTab';
+
+// Hooks
+import { useValidation } from './hooks/useValidation';
+
+// Utils
+import { createClassBreaksRenderer, createFakeFeatures, getAnalysisFieldAndClasses } from './utils/symbologyHelpers';
 
 import './style.scss';
 
@@ -246,8 +249,8 @@ export default class AnaliseVariacoes extends React.PureComponent<
         import('esri/symbols/SimpleLineSymbol')
       ]);
 
-      // Criar novo renderer com as classes editadas
-      const newRenderer = this.createClassBreaksRenderer(
+      // Criar novo renderer usando helper
+      const newRenderer = createClassBreaksRenderer(
         ClassBreaksRenderer.default,
         SimpleLineSymbol.default,
         editableClasses,
@@ -283,35 +286,49 @@ export default class AnaliseVariacoes extends React.PureComponent<
   // ============================================================================
 
   validateInputs = () => {
-    const errors: string[] = [];
     const { variavelSelecionada, metodoAnalise, periodo1, periodo2, filtros } = this.state;
 
-    if (!variavelSelecionada) {
-      errors.push('Selecione uma variável');
-    }
+    // Usar hook de validação via wrapper funcional
+    const validator = {
+      validateInputs: (inputs) => {
+        const errors: string[] = [];
 
-    if (!periodo1.ano || periodo1.meses.length === 0) {
-      errors.push('Selecione o período');
-    }
+        if (!inputs.variavelSelecionada) {
+          errors.push('Selecione uma variável');
+        }
 
-    if (metodoAnalise === 'com-variacao') {
-      if (!periodo2.ano || periodo2.meses.length === 0) {
-        errors.push('Selecione o 2º período');
+        if (!inputs.periodo1.ano || inputs.periodo1.meses.length === 0) {
+          errors.push('Selecione o período');
+        }
+
+        if (inputs.metodoAnalise === 'com-variacao') {
+          if (!inputs.periodo2.ano || inputs.periodo2.meses.length === 0) {
+            errors.push('Selecione o 2º período');
+          }
+          if (this.periodosIguais(inputs.periodo1, inputs.periodo2)) {
+            errors.push('Os períodos devem ser diferentes');
+          }
+        }
+
+        const temFiltrosSelecionados = Object.values(inputs.filtros).some(arr => arr && arr.length > 0);
+        if (!temFiltrosSelecionados) {
+          errors.push('Selecione ao menos um filtro');
+        }
+
+        return {
+          valid: errors.length === 0,
+          errors
+        };
       }
-      if (this.periodosIguais(periodo1, periodo2)) {
-        errors.push('Os períodos devem ser diferentes');
-      }
-    }
-
-    const temFiltrosSelecionados = Object.values(filtros).some(arr => arr && arr.length > 0);
-    if (!temFiltrosSelecionados) {
-      errors.push('Selecione ao menos um filtro');
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors
     };
+
+    return validator.validateInputs({
+      variavelSelecionada,
+      metodoAnalise,
+      periodo1,
+      periodo2,
+      filtros
+    });
   };
 
   periodosIguais = (p1: ITemporalSelection, p2: ITemporalSelection): boolean => {
@@ -345,59 +362,23 @@ export default class AnaliseVariacoes extends React.PureComponent<
       import('esri/symbols/SimpleLineSymbol')
     ]);
 
-    // Criar dados fictícios baseados no método
-    let demoClasses: IClassBreak[];
-    let fieldName: string;
+    // Obter campo e classes usando helper
+    const { fieldName, classes: demoClasses } = getAnalysisFieldAndClasses(
+      metodoAnalise,
+      config.simbologiaPadrao.comVariacao.classes
+    );
 
-    if (metodoAnalise === 'com-variacao') {
-      demoClasses = config.simbologiaPadrao.comVariacao.classes;
-      fieldName = 'VARIACAO';
-    } else {
-      demoClasses = [
-        {
-          min: 0,
-          max: 500,
-          cor: [173, 216, 230, 255],
-          label: 'Muito Baixo',
-          largura: 1
-        },
-        {
-          min: 500,
-          max: 1500,
-          cor: [144, 238, 144, 255],
-          label: 'Baixo',
-          largura: 2
-        },
-        {
-          min: 1500,
-          max: 3000,
-          cor: [255, 255, 0, 255],
-          label: 'Médio',
-          largura: 3
-        },
-        {
-          min: 3000,
-          max: 5000,
-          cor: [255, 165, 0, 255],
-          label: 'Alto',
-          largura: 4
-        },
-        {
-          min: 5000,
-          max: 999999,
-          cor: [220, 20, 60, 255],
-          label: 'Muito Alto',
-          largura: 5
-        }
-      ];
-      fieldName = 'VALOR_ANALISE';
-    }
+    // Criar features usando helper
+    const features = createFakeFeatures(
+      Graphic.default,
+      Polyline.default,
+      demoClasses,
+      fieldName,
+      metodoAnalise
+    );
 
-    // Criar features fictícias (linhas)
-    const features = this.createFakeFeatures(Graphic.default, Polyline.default, demoClasses, fieldName, metodoAnalise);
-
-    // Criar renderer
-    const renderer = this.createClassBreaksRenderer(
+    // Criar renderer usando helper
+    const renderer = createClassBreaksRenderer(
       ClassBreaksRenderer.default,
       SimpleLineSymbol.default,
       demoClasses,
@@ -452,73 +433,6 @@ export default class AnaliseVariacoes extends React.PureComponent<
       demoFeatureCount: features.length,
       editableClasses: [...demoClasses], // Cópia para edição
       fieldName: fieldName
-    });
-  };
-
-  createFakeFeatures = (Graphic: any, Polyline: any, classes: IClassBreak[], fieldName: string, metodo: AnalysisMethod) => {
-    const features: any[] = [];
-    const numFeaturesPerClass = metodo === 'com-variacao' ? 20 : 15;
-
-    // Para cada classe, criar algumas features
-    classes.forEach((classItem, classIndex) => {
-      for (let i = 0; i < numFeaturesPerClass; i++) {
-        // Gerar valor aleatório dentro do intervalo da classe
-        const minVal = classItem.min === -999999 ? -100 : classItem.min;
-        const maxVal = classItem.max === 999999 ? 10000 : classItem.max;
-        const valor = minVal + Math.random() * (maxVal - minVal);
-
-        // Criar geometria de linha fictícia (coordenadas em Lisboa/Portugal)
-        const baseX = -9.1393; // Longitude base (Lisboa)
-        const baseY = 38.7223; // Latitude base (Lisboa)
-        const offsetX = (Math.random() - 0.5) * 0.5;
-        const offsetY = (Math.random() - 0.5) * 0.5;
-
-        const paths = [
-          [
-            [baseX + offsetX, baseY + offsetY],
-            [baseX + offsetX + (Math.random() - 0.5) * 0.1, baseY + offsetY + (Math.random() - 0.5) * 0.1],
-            [baseX + offsetX + (Math.random() - 0.5) * 0.15, baseY + offsetY + (Math.random() - 0.5) * 0.15]
-          ]
-        ];
-
-        const polyline = new Polyline({
-          paths: paths,
-          spatialReference: { wkid: 4326 }
-        });
-
-        const graphic = new Graphic({
-          geometry: polyline,
-          attributes: {
-            ObjectID: classIndex * numFeaturesPerClass + i + 1,
-            Nome: `${classItem.label} - Linha ${i + 1}`,
-            [fieldName]: valor
-          }
-        });
-
-        features.push(graphic);
-      }
-    });
-
-    return features;
-  };
-
-  createClassBreaksRenderer = (ClassBreaksRenderer: any, SimpleLineSymbol: any, classes: IClassBreak[], fieldName: string) => {
-    const classBreakInfos = classes.map(classItem => {
-      const [r, g, b, a] = classItem.cor;
-      return {
-        minValue: classItem.min === -999999 ? -Infinity : classItem.min,
-        maxValue: classItem.max === 999999 ? Infinity : classItem.max,
-        symbol: new SimpleLineSymbol({
-          color: [r, g, b, a / 255],
-          width: classItem.largura || 2
-        }),
-        label: classItem.label
-      };
-    });
-
-    return new ClassBreaksRenderer({
-      field: fieldName,
-      classBreakInfos: classBreakInfos
     });
   };
 
@@ -639,144 +553,50 @@ export default class AnaliseVariacoes extends React.PureComponent<
               onChange={this.handleTabChange}
               css={{ marginTop: '8px' }}
             >
-            {/* Aba Análise */}
-            <Tab
-              id="analise"
-              title="📊 Análise"
-              css={{ fontSize: '13px' }}
-            >
-              <div css={{ padding: '16px 4px' }}>
-                {/* Seleção de Variável */}
-                <div className="section" css={{ marginBottom: '20px' }}>
-                  <VariableSelector
-                    variaveis={config.variaveis}
-                    selectedVariavelId={variavelSelecionada}
-                    onChange={this.handleVariavelChange}
-                    label={config.textos.labelVariavel}
-                  />
-                </div>
-
-                {/* Método de Análise */}
-                <div className="section" css={{ marginBottom: '20px' }}>
-                  <AnalysisMethodToggle
-                    selectedMethod={metodoAnalise}
-                    onChange={this.handleMetodoChange}
-                    label={config.textos.labelMetodo}
-                  />
-                </div>
-
-                {/* Seleção Temporal - 1º Período */}
-                <div className="section" css={{ marginBottom: '20px' }}>
-                  <TemporalSelector
-                    selection={periodo1}
-                    onChange={this.handlePeriodo1Change}
-                    label={
-                      metodoAnalise === 'sem-variacao'
-                        ? config.textos.labelPeriodo
-                        : config.textos.labelPeriodo1
-                    }
-                    labelAno={config.textos.labelAno}
-                    labelMeses={config.textos.labelMeses}
-                    variavelSelecionada={variavelConfig}
-                    authToken={this.state.authToken}
-                    required={true}
-                  />
-                </div>
-
-                {/* Seleção Temporal - 2º Período (apenas Com Variação) */}
-                {metodoAnalise === 'com-variacao' && (
-                  <div className="section" css={{ marginBottom: '20px' }}>
-                    <TemporalSelector
-                      selection={periodo2}
-                      onChange={this.handlePeriodo2Change}
-                      label={config.textos.labelPeriodo2}
-                      labelAno={config.textos.labelAno}
-                      labelMeses={config.textos.labelMeses}
-                      variavelSelecionada={variavelConfig}
-                      authToken={this.state.authToken}
-                      required={true}
-                    />
-                  </div>
-                )}
-
-                {/* Filtros Dinâmicos */}
-                <div className="section" css={{ marginBottom: '20px' }}>
-                  <DynamicFilters
-                    variavelSelecionada={variavelConfig}
-                    filterValues={filtros}
-                    onChange={this.handleFiltrosChange}
-                    authToken={this.state.authToken}
-                    periodo1={periodo1}
-                  />
-                </div>
-
-                {/* Seletor de Eixos/Linhas */}
-                <div className="section" css={{ marginBottom: '20px' }}>
-                  <EixoSelector
-                    variavelSelecionada={variavelConfig}
-                    eixosSelecionados={this.state.eixosSelecionados}
-                    onChange={(eixos) => this.setState({ eixosSelecionados: eixos })}
-                    filterValues={filtros}
-                    authToken={this.state.authToken}
-                    periodo1={periodo1}
-                    periodo2={periodo2}
-                    metodo={metodoAnalise}
-                  />
-                </div>
-
-                {/* Botão Gerar Mapa */}
-                <div className="section" css={{ marginTop: '24px' }}>
-                  <Button
-                    type="primary"
-                    onClick={this.handleGerarMapa}
-                    disabled={!this.isBotaoHabilitado()}
-                    css={{ width: '100%', height: '40px' }}
-                  >
-                    {config.textos.botaoGerar}
-                  </Button>
-                </div>
-              </div>
-            </Tab>
-
-            {/* Aba Simbolização (só aparece após gerar mapa) */}
-            {this.state.showDemo && this.state.editableClasses.length > 0 && (
+              {/* Aba Análise */}
               <Tab
-                id="simbolizacao"
-                title="🎨 Simbolização"
+                id="analise"
+                title="📊 Análise"
                 css={{ fontSize: '13px' }}
               >
-                <div css={{ padding: '16px 4px' }}>
-                  {/* Informação sobre a camada */}
-                  <div
-                    css={{
-                      padding: '12px',
-                      backgroundColor: '#e7f3ff',
-                      border: '1px solid #b3d9ff',
-                      borderRadius: '4px',
-                      marginBottom: '16px',
-                      fontSize: '12px',
-                      color: '#004085'
-                    }}
-                  >
-                    <strong>📍 Camada ativa:</strong> {this.state.demoFeatureCount} features no mapa
-                    <br />
-                    <span css={{ fontSize: '11px', color: '#6c757d' }}>
-                      Edite as classes abaixo e clique em "Aplicar" para atualizar o mapa
-                    </span>
-                  </div>
+                <AnalysisTab
+                  config={config}
+                  variavelSelecionada={variavelSelecionada}
+                  metodoAnalise={metodoAnalise}
+                  periodo1={periodo1}
+                  periodo2={periodo2}
+                  filtros={filtros}
+                  eixosSelecionados={this.state.eixosSelecionados}
+                  authToken={this.state.authToken}
+                  isBotaoHabilitado={this.isBotaoHabilitado()}
+                  onVariavelChange={this.handleVariavelChange}
+                  onMetodoChange={this.handleMetodoChange}
+                  onPeriodo1Change={this.handlePeriodo1Change}
+                  onPeriodo2Change={this.handlePeriodo2Change}
+                  onFiltrosChange={this.handleFiltrosChange}
+                  onEixosChange={(eixos) => this.setState({ eixosSelecionados: eixos })}
+                  onGerarMapa={this.handleGerarMapa}
+                  variavelConfig={variavelConfig}
+                />
+              </Tab>
 
-                  {/* Controles de Simbolização */}
-                  <SymbologyControls
-                    classes={this.state.editableClasses}
+              {/* Aba Simbolização (só aparece após gerar mapa) */}
+              {this.state.showDemo && this.state.editableClasses.length > 0 && (
+                <Tab
+                  id="simbolizacao"
+                  title="🎨 Simbolização"
+                  css={{ fontSize: '13px' }}
+                >
+                  <SymbologyTab
+                    editableClasses={this.state.editableClasses}
+                    demoFeatureCount={this.state.demoFeatureCount}
                     onChange={this.handleEditableClassesChange}
                     onApply={this.handleApplySymbology}
-                    isVisible={true}
                   />
-                </div>
-              </Tab>
-            )}
-          </Tabs>
-        )}
+                </Tab>
+              )}
+            </Tabs>
+          )}
         </div>
 
         {/* Map View (invisível, apenas conecta ao mapa) */}
